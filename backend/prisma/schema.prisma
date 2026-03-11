@@ -12,3 +12,36 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+
+model User {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  firstName         String
+  lastName          String?
+  profilePictureUrl String?
+  createdAt         DateTime @default(now())
+
+  sessions          Session[]
+}
+
+model Game {
+  id        String   @id @default(uuid())
+  name      String
+  imageUrl  String?
+  createdAt DateTime @default(now())
+
+  sessions  Session[]
+}
+
+model Session {
+  id            String   @id @default(uuid())
+  userId        String
+  gameId        String
+  startTime     DateTime
+  endTime       DateTime
+  playedSeconds Int
+
+  user User @relation(fields: [userId], references: [id])
+  game Game @relation(fields: [gameId], references: [id])
+}
