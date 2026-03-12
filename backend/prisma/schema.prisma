@@ -31,7 +31,7 @@ model Session {
   userId        String
   gameId        String
   startTime     DateTime
-  endTime       DateTime
+  endTime       DateTime?
   playedSeconds Int?
   game          Game     @relation(fields: [gameId], references: [id])
   user          User     @relation(fields: [userId], references: [id])
