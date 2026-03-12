@@ -2,9 +2,9 @@ import "dotenv/config";
 import express from "express";
 import prisma from "../lib/db.js";
 import gamesRouter from "./routes/games.js"
-import usersRouter from "./routes/games.js"
-import sessionsRouter from "./routes/games.js"
-import statsRouter from "./routes/games.js"
+import usersRouter from "./routes/user.js"
+import sessionsRouter from "./routes/session.js"
+import statsRouter from "./routes/stats.js"
 const app = express();
 const PORT = 4000;
 
