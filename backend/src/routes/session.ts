@@ -1,16 +1,17 @@
-import { Router } from 'express';
+import { Router } from "express";
 import prisma from "../../lib/db.js";
-
-
-import {
-  startSessionSchema,
-  stopSessionSchema
-} from '../validation/sessionV.js';
+import { startSessionSchema, stopSessionSchema } from "../validation/sessionV.js";
 
 const router = Router();
 
-router.post('/start', async (req, res) => {
-  const { userId, gameId } = req.body;
+router.post("/start", async (req, res) => {
+  const parsed = startSessionSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    return res.status(400).json(parsed.error);
+  }
+
+  const { userId, gameId } = parsed.data;
 
   const [user, game] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId } }),
@@ -18,7 +19,7 @@ router.post('/start', async (req, res) => {
   ]);
 
   if (!user || !game) {
-    return res.status(404).json({ message: 'User or game not found' });
+    return res.status(404).json({ message: "User or game not found" });
   }
 
   const session = await prisma.session.create({
@@ -32,19 +33,25 @@ router.post('/start', async (req, res) => {
   return res.status(201).json(session);
 });
 
-router.post('/stop', async (req, res) => {
-  const { sessionId } = req.body;
+router.post("/stop", async (req, res) => {
+  const parsed = stopSessionSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    return res.status(400).json(parsed.error);
+  }
+
+  const { sessionId } = parsed.data;
 
   const activeSession = await prisma.session.findUnique({
     where: { id: sessionId }
   });
 
   if (!activeSession) {
-    return res.status(404).json({ message: 'Session not found' });
+    return res.status(404).json({ message: "Session not found" });
   }
 
   if (activeSession.endTime) {
-    return res.status(400).json({ message: 'Session already stopped' });
+    return res.status(400).json({ message: "Session already stopped" });
   }
 
   const endTime = new Date();
