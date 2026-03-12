@@ -4,12 +4,22 @@ import { createUserSchema } from '../validation/userV.js';
 
 const router = Router();
 
-router.post('/', async (req, res) => {
-  const { email, firstName, lastName, profilePictureUrl } = req.body;
+router.post("/", async (req, res) => {
+    console.log("BODY:", req.body);
+   const parsed = createUserSchema.safeParse(req.body);
 
-  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (!parsed.success) {
+    return res.status(400).json(parsed.error);
+  }
+
+  const { email, firstName, lastName, profilePictureUrl } = parsed.data;
+
+  const existingUser = await prisma.user.findUnique({
+    where: { email }
+  });
+
   if (existingUser) {
-    return res.status(409).json({ message: 'Email already registered' });
+    return res.status(409).json({ message: "Email already registered" });
   }
 
   const user = await prisma.user.create({
@@ -17,12 +27,15 @@ router.post('/', async (req, res) => {
       email,
       firstName,
       lastName,
-      profilePictureUrl: profilePictureUrl || null
+      profilePictureUrl: profilePictureUrl ?? null
     }
   });
 
-  return res.status(201).json(user);
+  res.status(201).json(user);
 });
+
+
+
 
 router.get('/', async (_req, res) => {
   const users = await prisma.user.findMany({ orderBy: { createdAt: 'desc' } });
