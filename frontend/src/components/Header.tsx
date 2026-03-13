@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import { User } from '../types';
+import { User } from "/src/types.ts";
 import { api } from '../api';
 
 
