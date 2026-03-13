@@ -1,23 +1,32 @@
+/* ---------------------- */
+/* Root and Global Styles */
+/* ---------------------- */
 :root {
-  font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
-  color: #1f2933;
-  background: linear-gradient(180deg, #f4f7fb 0%, #eaf4ee 100%);
+  font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; /* Primary font stack */
+  color: #1f2933; /* Default text color */
+  background: linear-gradient(180deg, #f4f7fb 0%, #eaf4ee 100%); /* Page background gradient */
 }
 
 * {
-  box-sizing: border-box;
+  box-sizing: border-box; /* Include padding/border in element width */
 }
 
 body {
-  margin: 0;
+  margin: 0; /* Remove default body margin */
 }
 
+/* ---------------------- */
+/* App Shell Layout */
+/* ---------------------- */
 .app-shell {
-  min-height: 100vh;
+  min-height: 100vh; /* Fill viewport height */
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 240px 1fr; /* Sidebar + main content */
 }
 
+/* ---------------------- */
+/* Sidebar Styling */
+/* ---------------------- */
 .sidebar {
   padding: 1rem;
   background: #183a2d;
@@ -28,6 +37,7 @@ body {
   font-size: 1.2rem;
 }
 
+/* Sidebar navigation links */
 .nav-link {
   display: block;
   margin: 0.35rem 0;
@@ -42,11 +52,15 @@ body {
   background: #2f6f4f;
 }
 
+/* ---------------------- */
+/* Main Content Layout */
+/* ---------------------- */
 .main-content {
   display: flex;
   flex-direction: column;
 }
 
+/* Header with controls and weather */
 .header {
   display: flex;
   justify-content: space-between;
@@ -55,6 +69,9 @@ body {
   gap: 1rem;
 }
 
+/* ---------------------- */
+/* Weather Widget */
+/* ---------------------- */
 .weather {
   background: #ffffff;
   border: 1px solid #d9e2ea;
@@ -79,6 +96,9 @@ body {
   margin: 0.35rem 0;
 }
 
+/* ---------------------- */
+/* Search Area */
+/* ---------------------- */
 .search-area {
   position: relative;
   min-width: 280px;
@@ -121,6 +141,9 @@ label input {
   background: #eef7ff;
 }
 
+/* ---------------------- */
+/* Main Content Cards */
+/* ---------------------- */
 main {
   padding: 0 1rem 1rem;
 }
@@ -132,6 +155,9 @@ main {
   box-shadow: 0 8px 24px rgba(35, 55, 80, 0.08);
 }
 
+/* ---------------------- */
+/* Forms */
+/* ---------------------- */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -157,6 +183,9 @@ button:hover {
   background: #1f5138;
 }
 
+/* ---------------------- */
+/* User and Game Grids */
+/* ---------------------- */
 .users-grid,
 .games-grid {
   display: grid;
@@ -183,6 +212,9 @@ button:hover {
   border-radius: 8px;
 }
 
+/* ---------------------- */
+/* Timer Layout */
+/* ---------------------- */
 .timer-layout {
   display: grid;
   grid-template-columns: 1fr 280px;
@@ -200,6 +232,9 @@ button:hover {
   gap: 0.5rem;
 }
 
+/* ---------------------- */
+/* Charts */
+/* ---------------------- */
 .chart-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -213,6 +248,9 @@ button:hover {
   padding: 0.75rem;
 }
 
+/* ---------------------- */
+/* Tables */
+/* ---------------------- */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -225,6 +263,9 @@ td {
   padding: 0.5rem;
 }
 
+/* ---------------------- */
+/* Text Status Colors */
+/* ---------------------- */
 .error-text {
   color: #b32323;
 }
@@ -233,12 +274,15 @@ td {
   color: #1f7a3a;
 }
 
+/* ---------------------- */
+/* Responsive Design */
+/* ---------------------- */
 @media (max-width: 900px) {
   .app-shell {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Collapse sidebar under main content */
   }
 
   .timer-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Stack timer boxes */
   }
 }

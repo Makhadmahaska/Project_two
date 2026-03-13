@@ -9,15 +9,24 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="app-layout" style={{ display: 'flex' }}>
-      <Sidebar /> {/* Always on the side */}
-      <div style={{ flex: 1 }}>
-        {/* Pass a no-op function to satisfy Header's required prop */}
+    <div className="app-layout" style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar always on the left */}
+      <Sidebar />
+
+      {/* Main content area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* Header at top */}
         <Header onUserSelected={() => {}} />
-        <div style={{ padding: '20px' }}>
-          {children} {/* Page-specific content */}
+
+        {/* Weather placed at the top under the header */}
+        <div style={{ padding: '10px 20px' }}>
+          <Weather />
         </div>
-        <Weather /> {/* Always at bottom */}
+
+        {/* Page-specific content */}
+        <div style={{ padding: '20px', flex: 1 }}>
+          {children}
+        </div>
       </div>
     </div>
   );

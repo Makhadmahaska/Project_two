@@ -82,6 +82,8 @@ export function StatisticsPage({ currentUser }: Props) {
       )
     )
   );
+  const selectedGameName =
+    games.find((game) => game.id === selectedGameId)?.name ?? 'Selected Game';
 
   if (!currentUser) {
     return <section className="card">Select a user from search or All Users page to view stats.</section>;
@@ -217,6 +219,7 @@ export function StatisticsPage({ currentUser }: Props) {
           <thead>
             <tr>
               <th>Name</th>
+              <th>Game</th>
               <th>Time Played (min)</th>
             </tr>
           </thead>
@@ -224,12 +227,13 @@ export function StatisticsPage({ currentUser }: Props) {
             {leaderboard.map((row) => (
               <tr key={row.userId}>
                 <td>{row.name}</td>
+                <td>{selectedGameName}</td>
                 <td>{row.minutes}</td>
               </tr>
             ))}
             {leaderboard.length === 0 && (
               <tr>
-                <td colSpan={2}>No sessions recorded yet.</td>
+                <td colSpan={3}>No sessions recorded yet.</td>
               </tr>
             )}
           </tbody>
