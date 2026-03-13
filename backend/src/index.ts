@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import prisma from "../lib/db.js";
 import gamesRouter from "./routes/games.js"
 import usersRouter from "./routes/user.js"
@@ -8,6 +9,7 @@ import statsRouter from "./routes/stats.js"
 const app = express();
 const PORT = 4000;
 
+app.use(cors());
 app.use(express.json());
 
 app.use('/users', usersRouter);

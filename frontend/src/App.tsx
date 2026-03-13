@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Layout from './components/Layout';
 import { AllUsersPage } from './pages/Alluserpage';
 import { ChooseGamePage } from './pages/chooseGame';
 import { RegistrationPage } from './pages/registerPage';
@@ -26,15 +27,11 @@ export default function App() {
   );
 
   useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem('selectedUser', JSON.stringify(currentUser));
-    }
+    if (currentUser) localStorage.setItem('selectedUser', JSON.stringify(currentUser));
   }, [currentUser]);
 
   useEffect(() => {
-    if (selectedGame) {
-      localStorage.setItem('selectedGame', JSON.stringify(selectedGame));
-    }
+    if (selectedGame) localStorage.setItem('selectedGame', JSON.stringify(selectedGame));
   }, [selectedGame]);
 
   function handleUserSelected(user: User) {
@@ -49,37 +46,64 @@ export default function App() {
 
   return (
     <Routes>
+      {/* Default redirect */}
       <Route path="/" element={<Navigate to="/register" replace />} />
-      <Route path="/register" element={<RegistrationPage />} />
+
+      {/* Registration Page */}
+      <Route
+        path="/register"
+        element={
+          <Layout>
+            <RegistrationPage />
+          </Layout>
+        }
+      />
+
+      {/* All Users Page */}
       <Route
         path="/users"
-        element={<AllUsersPage onUserSelected={handleUserSelected} />}
+        element={
+          <Layout>
+            <AllUsersPage onUserSelected={handleUserSelected} />
+          </Layout>
+        }
       />
+
+      {/* Choose Game Page */}
       <Route
         path="/choose-game"
-        element={<ChooseGamePage onGameSelected={handleGameSelected} />}
+        element={
+          <Layout>
+            <ChooseGamePage onGameSelected={handleGameSelected} />
+          </Layout>
+        }
       />
+
+      {/* Timer Page - redirect if no user/game selected */}
       <Route
         path="/timer"
         element={
-          currentUser && selectedGame ? (
-            <TimerPage
-              currentUser={currentUser}
-              selectedGame={selectedGame}
-            />
-          ) : (
-            <Navigate to="/users" replace />
-          )
+          <Layout>
+            {currentUser && selectedGame ? (
+              <TimerPage currentUser={currentUser} selectedGame={selectedGame} />
+            ) : (
+              <Navigate to="/users" replace />
+            )}
+          </Layout>
         }
       />
+
+      {/* Statistics Page - redirect if no user selected */}
       <Route
         path="/statistics"
         element={
-          currentUser ? (
-            <StatisticsPage currentUser={currentUser} />
-          ) : (
-            <Navigate to="/users" replace />
-          )
+          <Layout>
+            {currentUser ? (
+              <StatisticsPage currentUser={currentUser} />
+            ) : (
+              <Navigate to="/users" replace />
+            )}
+          </Layout>
         }
       />
     </Routes>
