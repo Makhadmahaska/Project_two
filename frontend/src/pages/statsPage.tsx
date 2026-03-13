@@ -15,7 +15,7 @@ import {
   YAxis
 } from 'recharts';
 import { api } from '../api';
-import { Game, User, UserStats } from '../types';
+import type{ Game, User, UserStats } from '../types';
 
 const COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'];
 

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { api } from '../api';
-import { Game, User } from '../types';
+import type{ Game, User } from '../types';
 
 type Props = {
   currentUser: User | null;

@@ -5,7 +5,7 @@ import { ChooseGamePage } from './pages/chooseGame';
 import { RegistrationPage } from './pages/registerPage';
 import { StatisticsPage } from './pages/statsPage';
 import { TimerPage } from './pages/TimePage';
-import { Game, User } from './types';
+import type { Game, User } from './types';
 
 function getStored<T>(key: string): T | null {
   try {
