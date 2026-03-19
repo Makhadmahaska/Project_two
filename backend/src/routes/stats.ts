@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import prisma from "../../lib/db.js";
 const router = Router();
+const getPlayedSeconds = (playedSeconds: number | null) => playedSeconds ?? 0;
 
 router.get('/user/:userId', async (req, res) => {
   const userId = req.params.userId;
@@ -19,19 +20,19 @@ router.get('/user/:userId', async (req, res) => {
     include: { game: true }
   });
 
-  const totalPlayedSeconds = sessions.reduce((sum, s) => sum + s.playedSeconds, 0);
+  const totalPlayedSeconds = sessions.reduce((sum, s) => sum + getPlayedSeconds(s.playedSeconds), 0);
   const perGame = new Map<string, { gameId: string; gameName: string; total: number; sessions: number }>();
 
   for (const session of sessions) {
     const existing = perGame.get(session.gameId);
     if (existing) {
-      existing.total += session.playedSeconds;
+      existing.total += getPlayedSeconds(session.playedSeconds);
       existing.sessions += 1;
     } else {
       perGame.set(session.gameId, {
         gameId: session.gameId,
         gameName: session.game.name,
-        total: session.playedSeconds,
+        total: getPlayedSeconds(session.playedSeconds),
         sessions: 1
       });
     }
@@ -82,7 +83,7 @@ router.get('/user/:userId', async (req, res) => {
 
     for (const session of sessionsForGame) {
       const key = session.startTime.toISOString().slice(0, 10);
-      dayMap.set(key, (dayMap.get(key) ?? 0) + session.playedSeconds);
+      dayMap.set(key, (dayMap.get(key) ?? 0) + getPlayedSeconds(session.playedSeconds));
     }
 
     weeklyByUserForGame = [...dayMap.entries()].map(([date, seconds]) => ({
@@ -111,12 +112,12 @@ router.get('/global', async (_req, res) => {
   for (const session of sessions) {
     const current = totals.get(session.gameId);
     if (current) {
-      current.total += session.playedSeconds;
+      current.total += getPlayedSeconds(session.playedSeconds);
     } else {
       totals.set(session.gameId, {
         gameId: session.gameId,
         gameName: session.game.name,
-        total: session.playedSeconds
+        total: getPlayedSeconds(session.playedSeconds)
       });
     }
   }
@@ -151,12 +152,12 @@ router.get('/leaderboard', async (req, res) => {
     const existing = leaderboard.get(key);
 
     if (existing) {
-      existing.totalSeconds += session.playedSeconds;
+      existing.totalSeconds += getPlayedSeconds(session.playedSeconds);
     } else {
       leaderboard.set(key, {
         userId: session.userId,
         name: `${session.user.firstName} ${session.user.lastName}`,
-        totalSeconds: session.playedSeconds
+        totalSeconds: getPlayedSeconds(session.playedSeconds)
       });
     }
   }
@@ -207,7 +208,7 @@ router.get('/weekly-by-game', async (req, res) => {
     }
     const userName = `${session.user.firstName} ${session.user.lastName}`;
     const current = dayRows[dayKey]?.[userName] ?? 0;
-    dayRows[dayKey][userName] = current + session.playedSeconds;
+    dayRows[dayKey][userName] = current + getPlayedSeconds(session.playedSeconds);
   }
 
   const data = Object.entries(dayRows).map(([date, values]) => {

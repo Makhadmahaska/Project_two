@@ -1,21 +1,83 @@
-import type { User, Game, Session, UserStats } from "./types";
+export type User = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string | null;
+  profilePictureUrl: string | null;
+  createdAt: string;
+};
 
+export type Game = {
+  id: string;
+  name: string;
+  imageUrl: string | null;
+  createdAt: string;
+};
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4004';
+export type Session = {
+  id: string;
+  userId: string;
+  gameId: string;
+  startTime: string;
+  endTime: string | null;
+  playedSeconds: number | null;
+};
+
+export type UserStats = {
+  totalPlayedSeconds: number;
+  minutesPerGame: Array<{
+    gameId: string;
+    gameName: string;
+    minutes: number;
+  }>;
+  percentPerGame: Array<{
+    gameId: string;
+    gameName: string;
+    percent: number;
+  }>;
+  sessionsByGame: Array<{
+    gameId: string;
+    gameName: string;
+    sessions: number;
+    averageMinutes: number;
+  }>;
+  weeklyByUserForGame: Array<{
+    date: string;
+    minutes: number;
+  }>;
+};
+
+const API_BASE = import.meta.env.VITE_API_URL ?? "/api";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options
-  });
+  try {
+    const response = await fetch(`${API_BASE}${path}`, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(options?.headers ?? {}),
+      },
+      ...options,
+    });
 
-  const data = await response.json();
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
 
-  if (!response.ok) {
-    throw new Error(data.message ?? 'Something went wrong');
+    if (!response.ok) {
+      const message =
+        data && typeof data === "object" && "message" in data
+          ? String(data.message)
+          : "Request failed";
+      throw new Error(message);
+    }
+
+    return data as T;
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error("Could not reach the server. Start the backend and try again.");
+    }
+
+    throw error;
   }
-
-  return data;
 }
 
 export const api = {
@@ -24,33 +86,31 @@ export const api = {
     firstName: string;
     lastName: string;
     profilePictureUrl?: string;
-  }) => request<User>('/users', { method: 'POST', body: JSON.stringify(payload) }),
+  }) =>
+    request<User>("/users", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 
-  getUsers: () => request<User[]>('/users'),
+  getUsers: () => request<User[]>("/users"),
 
-  searchUsers: (query: string) => request<User[]>(`/users/search?q=${encodeURIComponent(query)}`),
+  searchUsers: (query: string) =>
+    request<User[]>(`/users/search?q=${encodeURIComponent(query)}`),
 
-  getGames: () => request<Game[]>('/games'),
+  getGames: () => request<Game[]>("/games"),
 
   startSession: (payload: { userId: string; gameId: string }) =>
-    request<Session>('/sessions/start', { method: 'POST', body: JSON.stringify(payload) }),
+    request<Session>("/sessions/start", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 
   stopSession: (payload: { sessionId: string }) =>
-    request<Session>('/sessions/stop', { method: 'POST', body: JSON.stringify(payload) }),
+    request<Session>("/sessions/stop", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 
   getUserStats: (userId: string, gameId?: string) =>
-    request<UserStats>(`/stats/user/${userId}${gameId ? `?gameId=${gameId}` : ''}`),
-
-  getGlobalStats: () =>
-    request<{
-      totalTimePerGame: Array<{ gameId: string; gameName: string; total: number; minutes: number }>;
-    }>('/stats/global'),
-
-  getLeaderboard: (gameId: string) =>
-    request<Array<{ userId: string; name: string; totalSeconds: number; minutes: number }>>(
-      `/stats/leaderboard?gameId=${gameId}`
-    ),
-
-  getWeeklyByGame: (gameId: string) =>
-    request<Array<Record<string, number | string>>>(`/stats/weekly-by-game?gameId=${gameId}`)
+    request<UserStats>(`/stats/user/${userId}${gameId ? `?gameId=${gameId}` : ""}`),
 };
