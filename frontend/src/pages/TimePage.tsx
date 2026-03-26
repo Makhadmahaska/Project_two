@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { api } from '../api';
-import type{ Game, User } from '../types';
+import type { Game, User } from '../types';
 
 type Props = {
   currentUser: User | null;
@@ -69,10 +69,21 @@ export function TimerPage({ currentUser, selectedGame }: Props) {
 
       <div className="timer-layout">
         <div>
-          <p>
-            User:{' '}
-            {currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : 'No user selected'}
-          </p>
+          {currentUser && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+              <img
+                src={currentUser.profilePictureUrl || 'https://placehold.co/80x80?text=User'}
+                alt={`${currentUser.firstName} ${currentUser.lastName}`}
+                style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover' }}
+              />
+              <div>
+                <p style={{ margin: 0, fontWeight: 600 }}>
+                  {currentUser.firstName} {currentUser.lastName}
+                </p>
+                <p style={{ margin: 0 }}>Current player</p>
+              </div>
+            </div>
+          )}
           <p>Game: {selectedGame ? selectedGame.name : 'No game selected'}</p>
 
           <div className="timer-box">{minutesForDisplay} min</div>
@@ -92,7 +103,13 @@ export function TimerPage({ currentUser, selectedGame }: Props) {
           {message && <p className="success-text">{message}</p>}
         </div>
 
-        {selectedGame && <img className="timer-image" src={selectedGame.imageUrl} alt={selectedGame.name} />}
+        {selectedGame && (
+          <img
+            className="timer-image"
+            src={selectedGame.imageUrl || 'https://placehold.co/420x240?text=Game'}
+            alt={selectedGame.name}
+          />
+        )}
       </div>
     </section>
   );

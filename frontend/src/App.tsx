@@ -46,44 +46,39 @@ export default function App() {
 
   return (
     <Routes>
-      {/* Default redirect */}
       <Route path="/" element={<Navigate to="/register" replace />} />
 
-      {/* Registration Page */}
       <Route
         path="/register"
         element={
-          <Layout>
+          <Layout onUserSelected={handleUserSelected}>
             <RegistrationPage />
           </Layout>
         }
       />
 
-      {/* All Users Page */}
       <Route
         path="/users"
         element={
-          <Layout>
+          <Layout onUserSelected={handleUserSelected}>
             <AllUsersPage onUserSelected={handleUserSelected} />
           </Layout>
         }
       />
 
-      {/* Choose Game Page */}
       <Route
         path="/choose-game"
         element={
-          <Layout>
+          <Layout onUserSelected={handleUserSelected}>
             <ChooseGamePage onGameSelected={handleGameSelected} />
           </Layout>
         }
       />
 
-      {/* Timer Page - redirect if no user/game selected */}
       <Route
         path="/timer"
         element={
-          <Layout>
+          <Layout onUserSelected={handleUserSelected}>
             {currentUser && selectedGame ? (
               <TimerPage currentUser={currentUser} selectedGame={selectedGame} />
             ) : (
@@ -93,11 +88,10 @@ export default function App() {
         }
       />
 
-      {/* Statistics Page - redirect if no user selected */}
       <Route
         path="/statistics"
         element={
-          <Layout>
+          <Layout onUserSelected={handleUserSelected}>
             {currentUser ? (
               <StatisticsPage currentUser={currentUser} />
             ) : (

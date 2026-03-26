@@ -15,7 +15,7 @@ import {
   YAxis
 } from 'recharts';
 import { api } from '../api';
-import type{ Game, User, UserStats } from '../types';
+import type { Game, User, UserStats } from '../types';
 
 const COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'];
 
@@ -41,11 +41,7 @@ export function StatisticsPage({ currentUser }: Props) {
   }, []);
 
   useEffect(() => {
-    if (!currentUser) {
-      setStats(null);
-      return;
-    }
-
+    if (!currentUser) return;
     api.getUserStats(currentUser.id, selectedGameId || undefined).then(setStats);
   }, [currentUser, selectedGameId]);
 
@@ -56,22 +52,14 @@ export function StatisticsPage({ currentUser }: Props) {
   }, []);
 
   useEffect(() => {
-    if (!selectedGameId) {
-      setLeaderboard([]);
-      return;
-    }
-
+    if (!selectedGameId) return;
     api.getLeaderboard(selectedGameId).then((rows) => {
       setLeaderboard(rows.map((row) => ({ userId: row.userId, name: row.name, minutes: row.minutes })));
     });
   }, [selectedGameId]);
 
   useEffect(() => {
-    if (!selectedGameId) {
-      setWeeklyByGame([]);
-      return;
-    }
-
+    if (!selectedGameId) return;
     api.getWeeklyByGame(selectedGameId).then(setWeeklyByGame);
   }, [selectedGameId]);
 
@@ -82,8 +70,12 @@ export function StatisticsPage({ currentUser }: Props) {
       )
     )
   );
+
   const selectedGameName =
     games.find((game) => game.id === selectedGameId)?.name ?? 'Selected Game';
+
+  const selectedGameSessionStats =
+    stats?.sessionsByGame.find((item) => item.gameId === selectedGameId) ?? null;
 
   if (!currentUser) {
     return <section className="card">Select a user from search or All Users page to view stats.</section>;
@@ -95,12 +87,24 @@ export function StatisticsPage({ currentUser }: Props) {
 
   return (
     <section className="card">
-      <h2>
-        Statistics for {currentUser.firstName} {currentUser.lastName}
-      </h2>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+        <img
+          src={currentUser.profilePictureUrl || 'https://placehold.co/96x96?text=User'}
+          alt={`${currentUser.firstName} ${currentUser.lastName}`}
+          style={{ width: '72px', height: '72px', borderRadius: '50%', objectFit: 'cover' }}
+        />
+        <div>
+          <h2 style={{ margin: 0 }}>
+            Statistics for {currentUser.firstName} {currentUser.lastName}
+          </h2>
+          <p style={{ margin: '6px 0 0 0' }}>
+            Total time played: {Math.round(stats.totalPlayedSeconds / 60)} minutes
+          </p>
+        </div>
+      </div>
 
       <label>
-        Choose game for weekly line chart / leaderboard
+        Choose game for detailed charts
         <select value={selectedGameId} onChange={(e) => setSelectedGameId(e.target.value)}>
           {games.map((game) => (
             <option key={game.id} value={game.id}>
@@ -109,8 +113,6 @@ export function StatisticsPage({ currentUser }: Props) {
           ))}
         </select>
       </label>
-
-      <p>Total time played: {Math.round(stats.totalPlayedSeconds / 60)} minutes</p>
 
       <div className="chart-grid">
         <div className="chart-card">
@@ -150,9 +152,21 @@ export function StatisticsPage({ currentUser }: Props) {
         </div>
 
         <div className="chart-card">
-          <h3>Sessions + Average Length</h3>
+          <h3>Sessions + Average Length (Selected Game)</h3>
           <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={stats.sessionsByGame}>
+            <BarChart
+              data={
+                selectedGameSessionStats
+                  ? [
+                      {
+                        gameName: selectedGameSessionStats.gameName,
+                        sessions: selectedGameSessionStats.sessions,
+                        averageMinutes: selectedGameSessionStats.averageMinutes
+                      }
+                    ]
+                  : []
+              }
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="gameName" />
               <YAxis />

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import prisma from "../../lib/db.js";
+
 const router = Router();
 const getPlayedSeconds = (playedSeconds: number | null) => playedSeconds ?? 0;
 
@@ -20,7 +21,11 @@ router.get('/user/:userId', async (req, res) => {
     include: { game: true }
   });
 
-  const totalPlayedSeconds = sessions.reduce((sum, s) => sum + getPlayedSeconds(s.playedSeconds), 0);
+  const totalPlayedSeconds = sessions.reduce(
+    (sum: number, session) => sum + getPlayedSeconds(session.playedSeconds),
+    0
+  );
+
   const perGame = new Map<string, { gameId: string; gameName: string; total: number; sessions: number }>();
 
   for (const session of sessions) {

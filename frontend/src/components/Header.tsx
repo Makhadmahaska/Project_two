@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import type { FormEvent } from 'react';
-import type { User } from "../types";
+import type { User } from '../types';
 import { api } from '../api';
-
+import Weather from './weather';
 
 type HeaderProps = {
   onUserSelected: (user: User) => void;
@@ -25,8 +25,7 @@ export function Header({ onUserSelected }: HeaderProps) {
 
   return (
     <header className="header">
-      
-
+      <Weather />
       <div className="search-area">
         <form onSubmit={handleSearch}>
           <input

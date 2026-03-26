@@ -5,10 +5,22 @@ async function main() {
 
   await prisma.game.createMany({
     data: [
-      { name: "CS2" },
-      { name: "Minecraft" },
-      { name: "Valorant" },
-      { name: "League of Legends" }
+      {
+        name: "CS2",
+        imageUrl: "https://placehold.co/420x240?text=CS2"
+      },
+      {
+        name: "Minecraft",
+        imageUrl: "https://placehold.co/420x240?text=Minecraft"
+      },
+      {
+        name: "Valorant",
+        imageUrl: "https://placehold.co/420x240?text=Valorant"
+      },
+      {
+        name: "League of Legends",
+        imageUrl: "https://placehold.co/420x240?text=League+of+Legends"
+      }
     ],
     skipDuplicates: true
   });

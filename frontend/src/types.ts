@@ -2,14 +2,16 @@ export type User = {
   id: string;
   email: string;
   firstName: string;
-  lastName: string;
-  profilePictureUrl?: string | null;
+  lastName: string | null;
+  profilePictureUrl: string | null;
+  createdAt?: string;
 };
 
 export type Game = {
   id: string;
   name: string;
-  imageUrl: string;
+  imageUrl: string | null;
+  createdAt?: string;
 };
 
 export type Session = {
@@ -17,8 +19,8 @@ export type Session = {
   userId: string;
   gameId: string;
   startTime: string;
-  endTime?: string | null;
-  playedSeconds: number;
+  endTime: string | null;
+  playedSeconds: number | null;
 };
 
 export type UserStats = {
