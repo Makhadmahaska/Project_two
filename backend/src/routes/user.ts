@@ -26,16 +26,13 @@ router.post("/", async (req, res) => {
     data: {
       email,
       firstName,
-      lastName,
+      lastName: lastName || null,
       profilePictureUrl: profilePictureUrl ?? null
     }
   });
 
   res.status(201).json(user);
 });
-
-
-
 
 router.get('/', async (_req, res) => {
   const users = await prisma.user.findMany({ orderBy: { createdAt: 'desc' } });

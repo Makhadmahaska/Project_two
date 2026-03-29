@@ -55,9 +55,13 @@ router.post("/stop", async (req, res) => {
   }
 
   const endTime = new Date();
-  const playedSeconds = Math.max(
+  const elapsedSeconds = Math.max(
     1,
     Math.floor((endTime.getTime() - activeSession.startTime.getTime()) / 1000)
+  );
+  const playedSeconds = Math.max(
+    60,
+    elapsedSeconds * 60
   );
 
   const session = await prisma.session.update({

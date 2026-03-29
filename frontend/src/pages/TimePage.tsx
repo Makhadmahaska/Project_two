@@ -11,6 +11,9 @@ export function TimerPage({ currentUser, selectedGame }: Props) {
   const [seconds, setSeconds] = useState(0);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
+  const currentUserName = currentUser
+    ? [currentUser.firstName, currentUser.lastName].filter(Boolean).join(' ')
+    : '';
 
   useEffect(() => {
     if (!sessionId) {
@@ -73,12 +76,12 @@ export function TimerPage({ currentUser, selectedGame }: Props) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
               <img
                 src={currentUser.profilePictureUrl || 'https://placehold.co/80x80?text=User'}
-                alt={`${currentUser.firstName} ${currentUser.lastName}`}
+                alt={currentUserName}
                 style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover' }}
               />
               <div>
                 <p style={{ margin: 0, fontWeight: 600 }}>
-                  {currentUser.firstName} {currentUser.lastName}
+                  {currentUserName}
                 </p>
                 <p style={{ margin: 0 }}>Current player</p>
               </div>

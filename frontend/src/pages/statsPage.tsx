@@ -73,6 +73,9 @@ export function StatisticsPage({ currentUser }: Props) {
 
   const selectedGameName =
     games.find((game) => game.id === selectedGameId)?.name ?? 'Selected Game';
+  const currentUserName = currentUser
+    ? [currentUser.firstName, currentUser.lastName].filter(Boolean).join(' ')
+    : '';
 
   const selectedGameSessionStats =
     stats?.sessionsByGame.find((item) => item.gameId === selectedGameId) ?? null;
@@ -90,12 +93,12 @@ export function StatisticsPage({ currentUser }: Props) {
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
         <img
           src={currentUser.profilePictureUrl || 'https://placehold.co/96x96?text=User'}
-          alt={`${currentUser.firstName} ${currentUser.lastName}`}
+          alt={currentUserName}
           style={{ width: '72px', height: '72px', borderRadius: '50%', objectFit: 'cover' }}
         />
         <div>
           <h2 style={{ margin: 0 }}>
-            Statistics for {currentUser.firstName} {currentUser.lastName}
+            Statistics for {currentUserName}
           </h2>
           <p style={{ margin: '6px 0 0 0' }}>
             Total time played: {Math.round(stats.totalPlayedSeconds / 60)} minutes

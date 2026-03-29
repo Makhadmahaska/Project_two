@@ -102,7 +102,7 @@ export const api = {
   createUser: (payload: {
     email: string;
     firstName: string;
-    lastName: string;
+    lastName?: string;
     profilePictureUrl?: string;
   }) =>
     request<User>('/users', {

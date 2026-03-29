@@ -7,7 +7,7 @@ import { api } from '../api';
 const registrationSchema = z.object({
   email: z.string().email('Please provide a valid email'),
   firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
+  lastName: z.string(),
 
   // Allow empty string OR valid URL
   profilePictureUrl: z
@@ -47,7 +47,6 @@ export function RegistrationPage() {
 
     const result = registrationSchema.safeParse(form);
 
-    // ✅ Zod v4 uses "issues" not "errors"
     if (!result.success) {
       setError(result.error.issues[0]?.message ?? 'Invalid input');
       return;
@@ -94,7 +93,7 @@ export function RegistrationPage() {
         </label>
 
         <label>
-          Last Name *
+          Last Name
           <input
             value={form.lastName}
             onChange={(e) =>

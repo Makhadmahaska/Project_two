@@ -39,10 +39,10 @@ export function AllUsersPage({ onUserSelected }: Props) {
           >
             <img
               src={user.profilePictureUrl || 'https://placehold.co/200x200?text=User'}
-              alt={`${user.firstName} ${user.lastName}`}
+              alt={[user.firstName, user.lastName].filter(Boolean).join(' ')}
             />
             <h3>
-              {user.firstName} {user.lastName}
+              {[user.firstName, user.lastName].filter(Boolean).join(' ')}
             </h3>
             <p>{user.email}</p>
           </button>

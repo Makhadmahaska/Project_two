@@ -50,7 +50,7 @@ export function Header({ onUserSelected }: HeaderProps) {
                 }}
                 className="result-item"
               >
-                {user.firstName} {user.lastName}
+                {[user.firstName, user.lastName].filter(Boolean).join(' ')}
               </button>
             ))}
           </div>
