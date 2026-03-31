@@ -1,14 +1,16 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import gamesRouter from "./routes/games.js"
-import usersRouter from "./routes/user.js"
-import sessionsRouter from "./routes/session.js"
-import statsRouter from "./routes/stats.js"
+
+import gamesRouter from "./routes/games.js";
+import usersRouter from "./routes/user.js";
+import sessionsRouter from "./routes/session.js";
+import statsRouter from "./routes/stats.js";
 
 const app = express();
 
 const PORT = Number(process.env.PORT ?? 4004);
+
 const allowedOrigins = (process.env.CORS_ORIGINS ?? "")
   .split(",")
   .map((origin) => origin.trim())
@@ -33,19 +35,21 @@ app.use(
     },
   })
 );
+
 app.use(express.json());
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-app.use('/users', usersRouter);
-app.use('/games', gamesRouter);
-app.use('/sessions', sessionsRouter);
-app.use('/stats', statsRouter);
+app.use("/users", usersRouter);
+app.use("/games", gamesRouter);
+app.use("/sessions", sessionsRouter);
+app.use("/stats", statsRouter);
 
-app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+app.use((error: unknown, _req: express.Request, res: express.Response) => {
   console.error(error);
+
   res.status(500).json({
     message: error instanceof Error ? error.message : "Internal server error",
   });
